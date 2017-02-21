@@ -1,18 +1,20 @@
-import json
-
 import requests
 
+from pencepay.settings.config import Context
+from pencepay.utils.exceptions import ValidationError
 from pencepay.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 class HttpClient(object):
-    api_base_url = 'https://api.pencepay.com/v1'
+    def __init__(self):
+        if not Context.public_key or not Context.secret_key:
+            raise ValidationError("Public key or Secret key is missing. Please use 'Context' class to set them.")
 
-    def __init__(self, public_key, secret_key):
-        self.public_key = public_key
-        self.secret_key = secret_key
+        self.public_key = Context.public_key
+        self.secret_key = Context.secret_key
+        self.api_base_url = Context.api_base_url
 
     def request(self, method: str, path: str, params: dict = None) -> object:
         kwargs = {
@@ -36,7 +38,7 @@ class HttpClient(object):
 
         response = {
             'status_code': r.status_code,
-            'body': json.loads(r.text)
+            'body': r.text
         }
 
         return response
