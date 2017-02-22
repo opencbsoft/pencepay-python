@@ -7,7 +7,7 @@ with open(path.join(here, 'README.md')) as f:
 setup(
     name='pencepay-python',
     version='0.0.1',
-    packages=['pencepay-python'],
+    packages=['pencepay'],
     url='https://github.com/opencbsoft/pencepay-python',
     license='MIT',
     author='Luci Furtun',
