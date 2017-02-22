@@ -10,8 +10,8 @@ setup(
     packages=['pencepay-python'],
     url='https://github.com/opencbsoft/pencepay-python',
     license='MIT',
-    author='Cristian Boboc',
-    author_email='cristi@cbsoft.ro',
+    author='Luci Furtun',
+    author_email='lucianfurtun@gmail.com',
     description='A pencepay class to help with payments.',
     long_description=long_description,
     classifiers=[
