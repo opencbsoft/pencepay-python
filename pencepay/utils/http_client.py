@@ -28,7 +28,7 @@ class HttpClient(object):
         if method.upper() == 'GET':
             kwargs['params'] = params
         else:
-            kwargs += params
+            kwargs.update(params)
 
         url = self.api_base_url + path
         r = requests.request(method, url, **kwargs)
