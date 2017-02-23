@@ -1,4 +1,4 @@
-# pencepay-python
+# pencepay-python  [![Build Status](https://travis-ci.org/opencbsoft/pencepay-python.svg?branch=master)](https://travis-ci.org/opencbsoft/pencepay-python)
 An implementation of the pencepay.com payment method
 
 
