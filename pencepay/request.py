@@ -1,5 +1,4 @@
-from serpy import BoolField
-from serpy import StrField, FloatField, IntField
+from serpy import StrField, FloatField, IntField, BoolField
 
 from pencepay.utils.base import BaseRequest
 from pencepay.utils.exceptions import ValidationError
