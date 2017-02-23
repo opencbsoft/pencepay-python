@@ -31,14 +31,9 @@ class HttpClient(object):
             kwargs['data'] = params
 
         url = self.api_base_url + path
-        r = requests.request(method, url, **kwargs)
+        response = requests.request(method, url, **kwargs)
 
-        if r.status_code > 200:
-            logger.error(r.text)
-
-        response = {
-            'status_code': r.status_code,
-            'body': r.text
-        }
+        if response.status_code > 200:
+            logger.error(response.text)
 
         return response
