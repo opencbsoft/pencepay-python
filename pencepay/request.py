@@ -38,6 +38,7 @@ class TransactionRequest(BaseRequest):
     description = StrField(required=False)
     amount = FloatField()
     currencyCode = StrField()
+    requestIpAddress = StrField(required=False)
     cancelUrl = StrField(required=False)
     redirectUrl = StrField(required=False)
     customer = CustomerRequest.as_field(required=False)
