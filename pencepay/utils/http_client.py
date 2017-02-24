@@ -2,9 +2,6 @@ import requests
 
 from pencepay.settings.config import Context
 from pencepay.utils.exceptions import ValidationError
-from pencepay.utils.logger import get_logger
-
-logger = get_logger(__name__)
 
 
 class HttpClient(object):
@@ -32,8 +29,5 @@ class HttpClient(object):
 
         url = self.api_base_url + path
         response = requests.request(method, url, **kwargs)
-
-        if response.status_code > 200:
-            logger.error(response.text)
 
         return response
