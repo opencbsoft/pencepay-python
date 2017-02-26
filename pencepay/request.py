@@ -11,8 +11,9 @@ class AddressRequest(BaseRequest):
 
 
 class CustomerRequest(BaseRequest):
-    firstName = StrField()
-    lastName = StrField()
+    name = StrField(required=False)
+    firstName = StrField(required=False)
+    lastName = StrField(required=False)
     email = StrField()
 
 
