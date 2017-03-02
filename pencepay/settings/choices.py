@@ -17,8 +17,3 @@ class APIChoices:
     BANK_ACCOUNTS = 'bank_accounts'
     PAYCODES = 'paycodes'
     EVENTS = 'events'
-
-
-class CredentialsChoices:
-    public_key = 'PENCEPAY_PUBLIC_KEY'
-    secret_key = 'PENCEPAY_SECRET_KEY'
