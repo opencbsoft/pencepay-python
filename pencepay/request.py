@@ -1,49 +1,50 @@
-from serpy import BoolField
-from serpy import StrField, FloatField, IntField
+from marshmallow import fields
 
 from pencepay.utils.base import BaseRequest
 from pencepay.utils.exceptions import ValidationError
 
 
 class AddressRequest(BaseRequest):
-    city = StrField()
-    postalCode = StrField()
-    countryCode = StrField()
+    city = fields.Str(required=True)
+    postalCode = fields.Str(required=True)
+    countryCode = fields.Str(required=True)
 
 
 class CustomerRequest(BaseRequest):
-    firstName = StrField()
-    lastName = StrField()
-    email = StrField()
+    name = fields.Str(required=False)
+    firstName = fields.Str(required=False)
+    lastName = fields.Str(required=False)
+    email = fields.Str(required=True)
 
 
 class CreditCardRequest(BaseRequest):
-    cardholderName = StrField()
-    number = StrField()
-    cvv = StrField()
-    expiryMonth = IntField()
-    expiryYear = IntField()
+    cardholderName = fields.Str(required=True)
+    number = fields.Str(required=True, dump_only=True)
+    cvv = fields.Str(required=True, dump_only=True)
+    expiryMonth = fields.Int(required=True)
+    expiryYear = fields.Int(required=True)
 
 
 class SettingsRequest(BaseRequest):
-    saveInSafe = BoolField(required=False)
-    reserveFundsOnly = BoolField(required=False)
-    locale = StrField(required=False)
+    saveInSafe = fields.Bool(required=False)
+    reserveFundsOnly = fields.Bool(required=False)
+    locale = fields.Str(required=False)
 
 
 class TransactionRequest(BaseRequest):
-    paymentMethod = StrField(required=False)
-    creditCardUid = StrField(required=False)
-    orderId = StrField(required=False)
-    description = StrField(required=False)
-    amount = FloatField()
-    currencyCode = StrField()
-    cancelUrl = StrField(required=False)
-    redirectUrl = StrField(required=False)
-    customer = CustomerRequest.as_field(required=False)
-    billingAddress = AddressRequest.as_field(required=False)
-    creditCard = CreditCardRequest.as_field(required=False)
-    settings = SettingsRequest.as_field(required=False)
+    paymentMethod = fields.Str(required=False)
+    creditCardUid = fields.Str(required=False)
+    orderId = fields.Str(required=False)
+    description = fields.Str(required=False)
+    amount = fields.Float(required=True)
+    currencyCode = fields.Str(required=True)
+    requestIpAddress = fields.Str(required=False)
+    cancelUrl = fields.Str(required=False)
+    redirectUrl = fields.Str(required=False)
+    customer = fields.Nested(CustomerRequest.as_field(), required=False)
+    billingAddress = fields.Nested(AddressRequest.as_field(), required=False)
+    creditCard = fields.Nested(CreditCardRequest.as_field(), required=False)
+    settings = fields.Nested(SettingsRequest.as_field(), required=False)
 
     def validate(self):
         data = self.__dict__
@@ -52,4 +53,14 @@ class TransactionRequest(BaseRequest):
 
 
 class AmountTransactionRequest(BaseRequest):
-    amount = FloatField()
+    amount = fields.Float(required=True)
+
+
+class EventRequest(BaseRequest):
+    uid = fields.Str()
+    type = fields.Str()
+    eventType = fields.Str()
+    objectUid = fields.Str()
+    objectType = fields.Str()
+    created = fields.Int()
+    transaction = fields.Nested(TransactionRequest.as_field())

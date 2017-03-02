@@ -1,10 +1,17 @@
-from serpy import Field
+from marshmallow import Schema, post_load
+from marshmallow.fields import Field
 
+from pencepay import request
 from pencepay.settings.choices import ActionChoices
 from pencepay.settings.endpoints import ENDPOINTS
 from pencepay.utils.functions import flatten_dict
 from pencepay.utils.http_client import HttpClient
-from pencepay.utils.serializer import Serializer
+
+
+class MakeObjectMixin:
+    @post_load
+    def make_object(self, data):
+        return request.TransactionRequest(**data)
 
 
 class RequestMetaclass(type):
@@ -12,7 +19,7 @@ class RequestMetaclass(type):
         super().__init__(*args, **kwargs)
 
         field_map = {k: v for k, v in cls.__dict__.items() if isinstance(v, Field)}
-        cls.serializer_class = type('RequestSerializer', (Serializer,), field_map.copy())
+        cls.serializer_class = type('RequestSerializer', (Schema, MakeObjectMixin), field_map.copy())
 
         for name, value in field_map.items():
             try:
@@ -28,16 +35,22 @@ class BaseRequest(metaclass=RequestMetaclass):
 
     def get_data(self):
         # self.validate() TODO: decide if we need validation.
-        return self.__class__.serializer_class(self).data
+        serializer = self.__class__.serializer_class()
+        return serializer.dump(self).data
 
     def get_flattened_data(self):
         data = self.get_data()
         flattened_data = flatten_dict(data)
         return flattened_data
 
+    def get_object(self, data):
+        serializer = self.__class__.serializer_class()
+        result = serializer.load(data, partial=True)
+        return result.data
+
     @classmethod
     def as_field(cls, **kwargs):
-        return cls.serializer_class(**kwargs)
+        return cls.serializer_class
 
     def validate(self):
         """

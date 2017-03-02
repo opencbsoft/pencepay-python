@@ -1,17 +1,28 @@
-import os
+from unittest.mock import Mock
 
 import pytest
 
-from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest, TransactionRequest
 from pencepay.request import AmountTransactionRequest, SettingsRequest
+from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest, TransactionRequest
 from pencepay.services import Transaction
-from pencepay.settings.choices import CredentialsChoices
 from pencepay.settings.config import Context
+from pencepay.tests.base import HTTPRequestTest
 
 
-class TestTransactionService:
+@pytest.fixture(autouse=True)
+def no_requests(monkeypatch):
+    request_mock = Mock()
+    request_mock.return_value = Mock(status_code=200, text='some text')
+    monkeypatch.setattr("requests.sessions.Session.request", request_mock)
+
+    return request_mock
+
+
+class TestTransactionService(HTTPRequestTest):
     @classmethod
     def setup_class(cls):
+        super().setup_class()
+
         cls.customer_request = CustomerRequest(
             firstName='John',
             lastName='Hancock',
@@ -38,9 +49,49 @@ class TestTransactionService:
             creditCard=cls.card_request
         )
 
-    def setup_method(self, method):
-        Context.set_public_key(os.environ.get(CredentialsChoices.public_key))
-        Context.set_secret_key(os.environ.get(CredentialsChoices.secret_key))
+    def test_create(self):
+        response = Transaction().create(request=self.transaction_request)
+
+        assert response.status_code == 200
+
+    def test_create_with_card_uid(self):
+        transaction_request = TransactionRequest()
+        transaction_request.creditCardUid = 'card_X8I6pT7g7c7nxI'
+        transaction_request.amount = 22
+        transaction_request.currencyCode = 'EUR'
+
+        response = Transaction().create(request=transaction_request)
+
+        assert response.status_code == 200
+
+    def test_find(self):
+        response = Transaction().find(uid='txn_bfXLikzGG5igxn')
+
+        assert response.status_code == 200
+
+    def test_search(self):
+        response = Transaction().search(params={'currencyCode': 'EUR'})
+
+        assert response.status_code == 200
+
+    def test_void(self):
+        response = Transaction().void(uid='txn_ACenirxGG5ioxA')
+
+        assert response.status_code == 200
+
+    def test_capture(self):
+        req = AmountTransactionRequest(amount=55)
+
+        response = Transaction().capture(uid='txn_ACenirxGG5ioxA', request=req)
+
+        assert response.status_code == 200
+
+    def test_refund(self):
+        req = AmountTransactionRequest(amount=55)
+
+        response = Transaction().refund(uid='txn_ACenirxGG5ioxA', request=req)
+
+        assert response.status_code == 200
 
     def test_generate_checkout_parameters(self):
         req = TransactionRequest()
@@ -82,52 +133,3 @@ class TestTransactionService:
         }
 
         assert data == expected
-
-    @pytest.mark.skip
-    def test_create(self):
-        response = Transaction().create(request=self.transaction_request)
-
-        assert response['status_code'] == 200
-
-    @pytest.mark.skip
-    def test_create_with_card_uid(self):
-        transaction_request = TransactionRequest()
-        transaction_request.creditCardUid = 'card_X8I6pT7g7c7nxI'
-        transaction_request.amount = 22
-        transaction_request.currencyCode = 'EUR'
-
-        response = Transaction().create(request=transaction_request)
-
-        assert response['status_code'] == 200
-
-    def test_find(self):
-        response = Transaction().find(uid='txn_bfXLikzGG5igxn')
-
-        assert response['status_code'] == 200
-
-    def test_search(self):
-        response = Transaction().search(params={'currencyCode': 'EUR'})
-
-        assert response['status_code'] == 200
-
-    @pytest.mark.skip
-    def test_void(self):
-        response = Transaction().void(uid='txn_ACenirxGG5ioxA')
-
-        assert response['status_code'] == 200
-
-    @pytest.mark.skip
-    def test_capture(self):
-        req = AmountTransactionRequest(amount=55)
-
-        response = Transaction().capture(uid='txn_ACenirxGG5ioxA', request=req)
-
-        assert response['status_code'] == 200
-
-    @pytest.mark.skip
-    def test_refund(self):
-        req = AmountTransactionRequest(amount=55)
-
-        response = Transaction().refund(uid='txn_ACenirxGG5ioxA', request=req)
-
-        assert response['status_code'] == 200
