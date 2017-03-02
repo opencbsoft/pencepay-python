@@ -40,5 +40,5 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     keywords='pencepay payment class',
-    install_requires=['requests', 'serpy', 'pytest'],
+    install_requires=['requests', 'marshmallow==3.0.0a1'],
 )

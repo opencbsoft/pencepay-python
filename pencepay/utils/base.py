@@ -1,4 +1,5 @@
-from serpy import Field
+from marshmallow import Schema
+from marshmallow.fields import Field
 
 from pencepay.settings.choices import ActionChoices
 from pencepay.settings.endpoints import ENDPOINTS
@@ -12,7 +13,7 @@ class RequestMetaclass(type):
         super().__init__(*args, **kwargs)
 
         field_map = {k: v for k, v in cls.__dict__.items() if isinstance(v, Field)}
-        cls.serializer_class = type('RequestSerializer', (Serializer,), field_map.copy())
+        cls.serializer_class = type('RequestSerializer', (Schema,), field_map.copy())
 
         for name, value in field_map.items():
             try:
@@ -28,7 +29,8 @@ class BaseRequest(metaclass=RequestMetaclass):
 
     def get_data(self):
         # self.validate() TODO: decide if we need validation.
-        return self.__class__.serializer_class(self).data
+        serializer = self.__class__.serializer_class()
+        return serializer.dump(self).data
 
     def get_flattened_data(self):
         data = self.get_data()
@@ -37,7 +39,7 @@ class BaseRequest(metaclass=RequestMetaclass):
 
     @classmethod
     def as_field(cls, **kwargs):
-        return cls.serializer_class(**kwargs)
+        return cls.serializer_class
 
     def validate(self):
         """
