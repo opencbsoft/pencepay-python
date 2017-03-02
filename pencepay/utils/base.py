@@ -5,7 +5,6 @@ from pencepay.settings.choices import ActionChoices
 from pencepay.settings.endpoints import ENDPOINTS
 from pencepay.utils.functions import flatten_dict
 from pencepay.utils.http_client import HttpClient
-from pencepay.utils.serializer import Serializer
 
 
 class RequestMetaclass(type):
