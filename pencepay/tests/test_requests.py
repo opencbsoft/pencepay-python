@@ -177,7 +177,7 @@ class TestTransactionRequest:
 
 class TestEventRequest:
     def test_get_objects(self):
-        with open('tests/data/event.json') as f:
+        with open('pencepay/tests/data/event.json') as f:
             data = json.load(f)
 
         request = EventRequest().get_object(data)
