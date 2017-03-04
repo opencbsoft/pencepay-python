@@ -1,7 +1,6 @@
 from marshmallow import Schema, post_load
 from marshmallow.fields import Field
 
-from pencepay import request
 from pencepay.settings.choices import ActionChoices
 from pencepay.settings.endpoints import ENDPOINTS
 from pencepay.utils.functions import flatten_dict
@@ -11,7 +10,10 @@ from pencepay.utils.http_client import HttpClient
 class MakeObjectMixin:
     @post_load
     def make_object(self, data):
-        return request.TransactionRequest(**data)
+        obj_class = self.obj_class
+        obj = obj_class(**data)
+
+        return obj
 
 
 class RequestMetaclass(type):
@@ -19,7 +21,10 @@ class RequestMetaclass(type):
         super().__init__(*args, **kwargs)
 
         field_map = {k: v for k, v in cls.__dict__.items() if isinstance(v, Field)}
-        cls.serializer_class = type('RequestSerializer', (Schema, MakeObjectMixin), field_map.copy())
+        serializer = type('RequestSerializer', (MakeObjectMixin, Schema), field_map.copy())
+        serializer.obj_class = cls
+
+        cls.serializer_class = serializer
 
         for name, value in field_map.items():
             try:
@@ -43,8 +48,9 @@ class BaseRequest(metaclass=RequestMetaclass):
         flattened_data = flatten_dict(data)
         return flattened_data
 
-    def get_object(self, data):
-        serializer = self.__class__.serializer_class()
+    @classmethod
+    def get_object(cls, data):
+        serializer = cls.serializer_class()
         result = serializer.load(data, partial=True)
         return result.data
 

@@ -176,10 +176,12 @@ class TestTransactionRequest:
 
 
 class TestEventRequest:
-    def test_get_objects(self):
+    def test_get_object(self):
         with open('pencepay/tests/data/event.json') as f:
             data = json.load(f)
 
-        request = EventRequest().get_object(data)
+        event = EventRequest.get_object(data)
 
-        assert request.uid == data['uid']
+        assert event.uid == data['uid']
+        assert event.transaction.paymentMethod == data['transaction']['paymentMethod']
+        assert event.transaction.creditCard.cardholderName == data['transaction']['creditCard']['cardholderName']
