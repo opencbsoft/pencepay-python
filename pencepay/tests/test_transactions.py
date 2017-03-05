@@ -49,47 +49,6 @@ class TestTransactionService(HTTPRequestTest):
             creditCard=cls.card_request
         )
 
-    def test_generate_checkout_parameters(self):
-        req = TransactionRequest()
-
-        req.orderId = '123456'
-        req.description = 'Holiday in Croatia, June 2015'
-        req.amount = 10.99
-        req.currencyCode = 'EUR'
-        req.cancelUrl = 'cancel-url-on-your-server'
-        req.redirectUrl = 'redirect-url-on-your-server'
-        req.billingAddress = self.address_request
-        req.customer = self.customer_request
-        req.settings = SettingsRequest(locale='hr-HR', reserveFundsOnly=True)
-
-        Context.api_version = '1.0.4'
-        Context.public_key = 'your-public-key'
-        Context.secret_key = 'your-secret-key'
-
-        data = Transaction.generate_checkout_parameters(request=req)
-        expected = {
-            'amount': 10.99,
-            'currencyCode': 'EUR',
-            'orderId': '123456',
-            'description': 'Holiday in Croatia, June 2015',
-
-            'customer.firstName': 'John',
-            'customer.lastName': 'Hancock',
-            'customer.email': 'hancock@server.com',
-            'billingAddress.city': 'Zagreb',
-            'billingAddress.postalCode': '10000',
-            'billingAddress.countryCode': 'HR',
-            'settings.reserveFundsOnly': True,
-            'settings.locale': 'hr-HR',
-            'cancelUrl': 'cancel-url-on-your-server',
-            'redirectUrl': 'redirect-url-on-your-server',
-            'apiVersion': '1.0.4',
-            'publicKey': 'your-public-key',
-            'signature': '4b13c88732ee001eae9dc30c69ea826949ac0c12afc6c51c2082163e57c277c5',
-        }
-
-        assert data == expected
-
     def test_create(self):
         response = Transaction().create(request=self.transaction_request)
 
@@ -133,3 +92,44 @@ class TestTransactionService(HTTPRequestTest):
         response = Transaction().refund(uid='txn_ACenirxGG5ioxA', request=req)
 
         assert response.status_code == 200
+
+    def test_generate_checkout_parameters(self):
+        req = TransactionRequest()
+
+        req.orderId = '123456'
+        req.description = 'Holiday in Croatia, June 2015'
+        req.amount = 10.99
+        req.currencyCode = 'EUR'
+        req.cancelUrl = 'cancel-url-on-your-server'
+        req.redirectUrl = 'redirect-url-on-your-server'
+        req.billingAddress = self.address_request
+        req.customer = self.customer_request
+        req.settings = SettingsRequest(locale='hr-HR', reserveFundsOnly=True)
+
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
+        data = Transaction.generate_checkout_parameters(request=req)
+        expected = {
+            'amount': 10.99,
+            'currencyCode': 'EUR',
+            'orderId': '123456',
+            'description': 'Holiday in Croatia, June 2015',
+
+            'customer.firstName': 'John',
+            'customer.lastName': 'Hancock',
+            'customer.email': 'hancock@server.com',
+            'billingAddress.city': 'Zagreb',
+            'billingAddress.postalCode': '10000',
+            'billingAddress.countryCode': 'HR',
+            'settings.reserveFundsOnly': True,
+            'settings.locale': 'hr-HR',
+            'cancelUrl': 'cancel-url-on-your-server',
+            'redirectUrl': 'redirect-url-on-your-server',
+            'apiVersion': '1.0.4',
+            'publicKey': 'your-public-key',
+            'signature': '4b13c88732ee001eae9dc30c69ea826949ac0c12afc6c51c2082163e57c277c5',
+        }
+
+        assert data == expected

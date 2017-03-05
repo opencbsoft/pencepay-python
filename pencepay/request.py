@@ -19,8 +19,8 @@ class CustomerRequest(BaseRequest):
 
 class CreditCardRequest(BaseRequest):
     cardholderName = fields.Str(required=True)
-    number = fields.Str(required=True)
-    cvv = fields.Str(required=True)
+    number = fields.Str(required=True, dump_only=True)
+    cvv = fields.Str(required=True, dump_only=True)
     expiryMonth = fields.Int(required=True)
     expiryYear = fields.Int(required=True)
 
@@ -54,3 +54,13 @@ class TransactionRequest(BaseRequest):
 
 class AmountTransactionRequest(BaseRequest):
     amount = fields.Float(required=True)
+
+
+class EventRequest(BaseRequest):
+    uid = fields.Str()
+    type = fields.Str()
+    eventType = fields.Str()
+    objectUid = fields.Str()
+    objectType = fields.Str()
+    created = fields.Int()
+    transaction = fields.Nested(TransactionRequest.as_field())

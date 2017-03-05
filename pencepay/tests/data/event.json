@@ -1,0 +1,62 @@
+{
+  "uid": "evnt_rt7oiejK56iKME",
+  "type": "event",
+  "eventType": "transaction.success",
+  "objectUid": "txn_gtb6i6xLakiEM9",
+  "objectType": "transaction",
+  "created": 1488483830,
+  "transaction": {
+    "uid": "txn_gtb6i6xLakiEM9",
+    "type": "transaction",
+    "id": 638557,
+    "live": false,
+    "amount": 55.50,
+    "currencyCode": "USD",
+    "refundedAmount": 0.00,
+    "orderId": "1234",
+    "transactionType": "PAYMENT",
+    "status": "CAPTURED",
+    "paymentMethod": "VISA",
+    "failureCode": 0,
+    "tags": [],
+    "customData": {},
+    "created": 1488483830,
+    "store": {
+      "uid": "sto_Euo5cxkkpTRyzu",
+      "type": "store",
+      "active": true,
+      "name": "Main store",
+      "fqdn": "tmp.domain.com",
+      "created": 1487070955,
+      "default": true
+    },
+    "customer": {
+      "type": "customer",
+      "firstName": "John",
+      "lastName": "Hancock",
+      "email": "hancock@server.com",
+      "addresses": [],
+      "creditCards": [],
+      "bankAccounts": [],
+      "customData": {},
+      "created": 1488483830
+    },
+    "creditCard": {
+      "type": "card",
+      "cardholderName": "John Hancock",
+      "brand": "VISA",
+      "imageUrl": "https://cdn.pencepay.com/assets/images/cards/VISA.gif",
+      "bin": "435010",
+      "last4": "1002",
+      "expiryMonth": 12,
+      "expiryYear": 2018,
+      "fingerprint": "a77a83c159c728347ac7bdf08e3c4141269c2e25a11b444c08229f436d228440",
+      "customData": {},
+      "created": 1488483830,
+      "expiryDate": "12/2018",
+      "expired": false,
+      "maskedNumber": "435010******1002",
+      "default": false
+    }
+  }
+}

@@ -1,4 +1,4 @@
-from marshmallow import Schema
+from marshmallow import Schema, post_load
 from marshmallow.fields import Field
 
 from pencepay.settings.choices import ActionChoices
@@ -7,12 +7,24 @@ from pencepay.utils.functions import flatten_dict
 from pencepay.utils.http_client import HttpClient
 
 
+class MakeObjectMixin:
+    @post_load
+    def make_object(self, data):
+        obj_class = self.obj_class
+        obj = obj_class(**data)
+
+        return obj
+
+
 class RequestMetaclass(type):
     def __init__(cls, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         field_map = {k: v for k, v in cls.__dict__.items() if isinstance(v, Field)}
-        cls.serializer_class = type('RequestSerializer', (Schema,), field_map.copy())
+        serializer = type('RequestSerializer', (MakeObjectMixin, Schema), field_map.copy())
+        serializer.obj_class = cls
+
+        cls.serializer_class = serializer
 
         for name, value in field_map.items():
             try:
@@ -37,7 +49,13 @@ class BaseRequest(metaclass=RequestMetaclass):
         return flattened_data
 
     @classmethod
-    def as_field(cls, **kwargs):
+    def get_object(cls, data: dict):
+        serializer = cls.serializer_class()
+        result = serializer.load(data, partial=True)
+        return result.data
+
+    @classmethod
+    def as_field(cls):
         return cls.serializer_class
 
     def validate(self):
@@ -77,31 +95,31 @@ class CRUDBasedServiceMixin:
     request = None
 
     def create(self, request):
-        self.action = 'create'
+        self.action = ActionChoices.CREATE
         self.request = request
         response = self._http_request()
         return response
 
     def find(self, uid: str):
-        self.action = 'find'
+        self.action = ActionChoices.FIND
         return self._http_request(uid=uid)
 
     def search(self, params: dict):
-        self.action = 'search'
+        self.action = ActionChoices.SEARCH
         return self._http_request(params=params)
 
     def update(self, uid: str, request):
-        self.action = 'update'
+        self.action = ActionChoices.UPDATE
         self.request = request
         return self._http_request(uid=uid)
 
     def delete(self, uid: str):
-        self.action = 'delete'
+        self.action = ActionChoices.DELETE
         return self._http_request(uid=uid)
 
 
 class CustomerBasedServiceMixin:
-    def __init__(self, customer_uid):
+    def __init__(self, customer_uid: str):
         self.customer_uid = customer_uid
         super().__init__()
 

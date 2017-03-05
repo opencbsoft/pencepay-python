@@ -1,6 +1,8 @@
+import json
+
 import pytest
 
-from pencepay.request import AddressRequest, TransactionRequest, CustomerRequest, CreditCardRequest
+from pencepay.request import AddressRequest, TransactionRequest, CustomerRequest, CreditCardRequest, EventRequest
 from pencepay.utils.exceptions import ValidationError
 
 
@@ -171,3 +173,15 @@ class TestTransactionRequest:
 
         with pytest.raises(ValidationError):
             transaction_request.get_data()
+
+
+class TestEventRequest:
+    def test_get_object(self):
+        with open('pencepay/tests/data/event.json') as f:
+            data = json.load(f)
+
+        event = EventRequest.get_object(data)
+
+        assert event.uid == data['uid']
+        assert event.transaction.paymentMethod == data['transaction']['paymentMethod']
+        assert event.transaction.creditCard.cardholderName == data['transaction']['creditCard']['cardholderName']
