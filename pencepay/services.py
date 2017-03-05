@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 from pencepay.request import EventRequest
 from pencepay.settings.choices import APIChoices, ActionChoices
@@ -30,7 +31,14 @@ class Event(BaseService):
         return self._http_request(params=params)
 
     def parse(self, post_body, check_authenticity=False):
-        event = EventRequest.get_object(post_body)
+        if isinstance(post_body, str):
+            data = json.loads(post_body)
+        elif isinstance(post_body, dict):
+            data = post_body
+        else:
+            raise Exception("Unknown format. 'post_body' should be str or dict")
+
+        event = EventRequest.get_object(data)
 
         if check_authenticity and event:
             result = self.find(event.uid)

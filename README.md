@@ -82,4 +82,15 @@ from pencepay.services import Transaction
 response = Transaction().create(request=transaction_request)
 ```
 
+## Step 4 (Optional): Receive `Event` notifications
+
+### Parsing of received data
+```python
+from pencepay.services import Event
+
+event = Event().parse(data, check_authenticity=False)
+```
+Where `data` is either a json `str` or `dict`. [Here](https://github.com/opencbsoft/pencepay-python/tree/master/pencepay/tests/data/event.json) is an example of how the structure should look like. 
+
+
 For more information about how to use our api, please check the `tests` ([here](https://github.com/opencbsoft/pencepay-python/tree/master/pencepay/tests) are more examples).
