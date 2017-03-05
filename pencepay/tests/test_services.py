@@ -1,9 +1,10 @@
-from unittest.mock import Mock
+import json
+from unittest.mock import Mock, patch
 
 import pytest
 
 from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest
-from pencepay.services import CreditCard, Customer, Address
+from pencepay.services import CreditCard, Customer, Address, Event
 from pencepay.tests.base import HTTPRequestTest
 
 
@@ -215,3 +216,58 @@ class TestAddressService(HTTPRequestTest):
         assert 'cust_rLu7LTgKbceGdu' in args['url']
         assert args['method'] == 'DELETE'
         assert response.status_code == 200
+
+
+class TestEventService(HTTPRequestTest):
+    def test_find(self, requests_mock):
+        response = Event().find(uid='evnt_rt7oiejK56iKME')
+
+        args = requests_mock.call_args[1]
+
+        assert 'evnt_rt7oiejK56iKME' in args['url']
+        assert args['method'] == 'GET'
+        assert response.status_code == 200
+
+    def test_search(self, requests_mock):
+        response = Event().search({'objectUid': 'evnt_rt7oiejK56iKME'})
+
+        args = requests_mock.call_args[1]
+
+        assert args['params']['objectUid'] == 'evnt_rt7oiejK56iKME'
+        assert args['method'] == 'GET'
+        assert response.status_code == 200
+
+    def test_parse(self):
+        with open('pencepay/tests/data/event.json') as f:
+            data = json.load(f)
+
+        event = Event().parse(data)
+
+        assert event.uid == data['uid']
+        assert event.transaction.paymentMethod == data['transaction']['paymentMethod']
+        assert event.transaction.creditCard.cardholderName == data['transaction']['creditCard']['cardholderName']
+
+    def test_parse_authenticity(self, requests_mock):
+        with open('pencepay/tests/data/event.json') as f:
+            data = json.load(f)
+
+        event = Event().parse(data, check_authenticity=True)
+
+        assert event.uid == data['uid']
+        assert event.transaction.paymentMethod == data['transaction']['paymentMethod']
+        assert event.transaction.creditCard.cardholderName == data['transaction']['creditCard']['cardholderName']
+
+        args = requests_mock.call_args[1]
+
+        assert 'evnt_rt7oiejK56iKME' in args['url']
+        assert args['method'] == 'GET'
+
+    @patch('requests.sessions.Session.request')
+    def test_parse_authenticity_raises_error(self, requests_mock):
+        requests_mock.return_value = Mock(status_code=404, text='some text')
+
+        with open('pencepay/tests/data/event.json') as f:
+            data = json.load(f)
+
+        with pytest.raises(Exception):
+            event = Event().parse(data, check_authenticity=True)

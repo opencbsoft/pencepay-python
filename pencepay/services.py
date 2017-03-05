@@ -1,5 +1,6 @@
 import hashlib
 
+from pencepay.request import EventRequest
 from pencepay.settings.choices import APIChoices
 from pencepay.settings.config import Context
 from pencepay.utils.base import CustomerBasedServiceMixin, CRUDBasedServiceMixin, BaseService
@@ -15,6 +16,28 @@ class Address(CustomerBasedServiceMixin, CRUDBasedServiceMixin, BaseService):
 
 class Customer(BaseService, CRUDBasedServiceMixin):
     api = APIChoices.CUSTOMERS
+
+
+class Event(BaseService):
+    api = APIChoices.EVENTS
+
+    def find(self, uid: str):
+        self.action = 'find'
+        return self._http_request(uid=uid)
+
+    def search(self, params: dict):
+        self.action = 'search'
+        return self._http_request(params=params)
+
+    def parse(self, post_body, check_authenticity=False):
+        event = EventRequest.get_object(post_body)
+
+        if check_authenticity and event:
+            result = self.find(event.uid)
+            if result.status_code > 300:
+                raise Exception("Authenticity failed for this event: uid: {uid}.")
+
+        return event
 
 
 class Transaction(BaseService):

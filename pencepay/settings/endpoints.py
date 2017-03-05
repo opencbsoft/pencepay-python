@@ -90,5 +90,15 @@ ENDPOINTS = {
             'method': 'DELETE',
             'path': '/customer/{customer_uid}/address/{uid}'
         }
+    },
+    'events': {
+        'search': {
+            'method': 'GET',
+            'path': '/events/'
+        },
+        'find': {
+            'method': 'GET',
+            'path': '/event/{uid}'
+        },
     }
 }

@@ -49,13 +49,13 @@ class BaseRequest(metaclass=RequestMetaclass):
         return flattened_data
 
     @classmethod
-    def get_object(cls, data):
+    def get_object(cls, data: dict):
         serializer = cls.serializer_class()
         result = serializer.load(data, partial=True)
         return result.data
 
     @classmethod
-    def as_field(cls, **kwargs):
+    def as_field(cls):
         return cls.serializer_class
 
     def validate(self):
@@ -119,7 +119,7 @@ class CRUDBasedServiceMixin:
 
 
 class CustomerBasedServiceMixin:
-    def __init__(self, customer_uid):
+    def __init__(self, customer_uid: str):
         self.customer_uid = customer_uid
         super().__init__()
 
