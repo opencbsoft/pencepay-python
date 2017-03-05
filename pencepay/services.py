@@ -1,7 +1,7 @@
 import hashlib
 
 from pencepay.request import EventRequest
-from pencepay.settings.choices import APIChoices
+from pencepay.settings.choices import APIChoices, ActionChoices
 from pencepay.settings.config import Context
 from pencepay.utils.base import CustomerBasedServiceMixin, CRUDBasedServiceMixin, BaseService
 
@@ -22,11 +22,11 @@ class Event(BaseService):
     api = APIChoices.EVENTS
 
     def find(self, uid: str):
-        self.action = 'find'
+        self.action = ActionChoices.FIND
         return self._http_request(uid=uid)
 
     def search(self, params: dict):
-        self.action = 'search'
+        self.action = ActionChoices.SEARCH
         return self._http_request(params=params)
 
     def parse(self, post_body, check_authenticity=False):
@@ -45,29 +45,29 @@ class Transaction(BaseService):
     action = None
 
     def create(self, request):
-        self.action = 'create'
+        self.action = ActionChoices.CREATE
         self.request = request
         return self._http_request()
 
     def find(self, uid: str):
-        self.action = 'find'
+        self.action = ActionChoices.FIND
         return self._http_request(uid=uid)
 
     def search(self, params: dict):
-        self.action = 'search'
+        self.action = ActionChoices.SEARCH
         return self._http_request(params=params)
 
     def void(self, uid: str):
-        self.action = 'void'
+        self.action = ActionChoices.VOID
         return self._http_request(uid=uid)
 
     def capture(self, uid: str, request):
-        self.action = 'capture'
+        self.action = ActionChoices.CAPTURE
         self.request = request
         return self._http_request(uid=uid)
 
     def refund(self, uid: str, request):
-        self.action = 'refund'
+        self.action = ActionChoices.REFUND
         self.request = request
         return self._http_request(uid=uid)
 

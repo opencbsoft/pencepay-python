@@ -95,26 +95,26 @@ class CRUDBasedServiceMixin:
     request = None
 
     def create(self, request):
-        self.action = 'create'
+        self.action = ActionChoices.CREATE
         self.request = request
         response = self._http_request()
         return response
 
     def find(self, uid: str):
-        self.action = 'find'
+        self.action = ActionChoices.FIND
         return self._http_request(uid=uid)
 
     def search(self, params: dict):
-        self.action = 'search'
+        self.action = ActionChoices.SEARCH
         return self._http_request(params=params)
 
     def update(self, uid: str, request):
-        self.action = 'update'
+        self.action = ActionChoices.UPDATE
         self.request = request
         return self._http_request(uid=uid)
 
     def delete(self, uid: str):
-        self.action = 'delete'
+        self.action = ActionChoices.DELETE
         return self._http_request(uid=uid)
 
 

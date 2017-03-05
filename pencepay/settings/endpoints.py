@@ -1,102 +1,104 @@
+from pencepay.settings.choices import ActionChoices
+
 ENDPOINTS = {
     'transactions': {
-        'create': {
+        ActionChoices.CREATE: {
             'method': 'POST',
             'path': '/transaction',
         },
-        'search': {
+        ActionChoices.SEARCH: {
             'method': 'GET',
             'path': '/transactions'
         },
-        'find': {
+        ActionChoices.FIND: {
             'method': 'GET',
             'path': '/transaction/{uid}'
         },
-        'void': {
+        ActionChoices.VOID: {
             'method': 'POST',
             'path': '/transaction/{uid}/void'
         },
-        'capture': {
+        ActionChoices.CAPTURE: {
             'method': 'POST',
             'path': '/transaction/{uid}/capture'
         },
-        'refund': {
+        ActionChoices.REFUND: {
             'method': 'POST',
             'path': '/transaction/{uid}/refund'
         }
     },
     'customers': {
-        'create': {
+        ActionChoices.CREATE: {
             'method': 'POST',
             'path': '/customer',
         },
-        'find': {
+        ActionChoices.FIND: {
             'method': 'GET',
             'path': '/customer/{uid}'
         },
-        'search': {
+        ActionChoices.SEARCH: {
             'method': 'GET',
             'path': '/customers'
         },
-        'update': {
+        ActionChoices.UPDATE: {
             'method': 'POST',
             'path': '/customer/{uid}'
         },
-        'delete': {
+        ActionChoices.DELETE: {
             'method': 'DELETE',
             'path': '/customer/{uid}'
         }
     },
     'cards': {
-        'create': {
+        ActionChoices.CREATE: {
             'method': 'POST',
             'path': '/customer/{customer_uid}/card',
         },
-        'search': {
+        ActionChoices.SEARCH: {
             'method': 'GET',
             'path': '/customer/{customer_uid}/cards'
         },
-        'find': {
+        ActionChoices.FIND: {
             'method': 'GET',
             'path': '/customer/{customer_uid}/card/{uid}'
         },
-        'update': {
+        ActionChoices.UPDATE: {
             'method': 'POST',
             'path': '/customer/{customer_uid}/card/{uid}'
         },
-        'delete': {
+        ActionChoices.DELETE: {
             'method': 'DELETE',
             'path': '/customer/{customer_uid}/card/{uid}'
         }
     },
     'addresses': {
-        'create': {
+        ActionChoices.CREATE: {
             'method': 'POST',
             'path': '/customer/{customer_uid}/address',
         },
-        'search': {
+        ActionChoices.SEARCH: {
             'method': 'GET',
             'path': '/customer/{customer_uid}/addresses'
         },
-        'find': {
+        ActionChoices.FIND: {
             'method': 'GET',
             'path': '/customer/{customer_uid}/address/{uid}'
         },
-        'update': {
+        ActionChoices.UPDATE: {
             'method': 'POST',
             'path': '/customer/{customer_uid}/address/{uid}'
         },
-        'delete': {
+        ActionChoices.DELETE: {
             'method': 'DELETE',
             'path': '/customer/{customer_uid}/address/{uid}'
         }
     },
     'events': {
-        'search': {
+        ActionChoices.SEARCH: {
             'method': 'GET',
             'path': '/events/'
         },
-        'find': {
+        ActionChoices.FIND: {
             'method': 'GET',
             'path': '/event/{uid}'
         },
