@@ -25,6 +25,22 @@ class CreditCardRequest(BaseRequest):
     expiryYear = fields.Int(required=True)
 
 
+class BankAccountRequest(BaseRequest):
+    accountHolder = fields.Str(required=True)
+    accountNumber = fields.Str(required=True)
+    iban = fields.Str(required=True)
+    bic = fields.Str(required=True)
+    countryCode = fields.Str(required=True)
+
+
+class PayCodeRequest(BaseRequest):
+    amount = fields.Float(required=True)
+    currencyCode = fields.Str(required=True)
+    orderId = fields.Str(required=True)
+    description = fields.Str(required=True)
+    validUntil = fields.Str(required=True)
+
+
 class SettingsRequest(BaseRequest):
     saveInSafe = fields.Bool(required=False)
     reserveFundsOnly = fields.Bool(required=False)

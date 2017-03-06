@@ -2,7 +2,9 @@ import json
 
 import pytest
 
-from pencepay.request import AddressRequest, TransactionRequest, CustomerRequest, CreditCardRequest, EventRequest
+from pencepay.request import AddressRequest, TransactionRequest, CustomerRequest, CreditCardRequest
+from pencepay.request import EventRequest, BankAccountRequest, PayCodeRequest
+
 from pencepay.utils.exceptions import ValidationError
 
 
@@ -56,6 +58,50 @@ class TestCreditCardRequest:
             'cvv': '313',
             'expiryMonth': 12,
             'expiryYear': 2018,
+        }
+
+        assert data == expected
+
+
+class TestBankAccountRequest:
+    def test_get_data(self):
+        req = BankAccountRequest()
+        req.accountHolder = 'John Hancock'
+        req.accountNumber = '1111112222'
+        req.iban = 'GB0000000000000'
+        req.bic = 'GB001BIC'
+        req.countryCode = 'HR'
+
+        data = req.get_data()
+
+        expected = {
+            'accountHolder': 'John Hancock',
+            'accountNumber': '1111112222',
+            'iban': 'GB0000000000000',
+            'bic': 'GB001BIC',
+            'countryCode': 'HR'
+        }
+
+        assert data == expected
+
+
+class TestPayCodeRequest:
+    def test_get_data(self):
+        req = PayCodeRequest()
+        req.amount = '55.5'
+        req.currencyCode = 'EUR'
+        req.orderId = '1234567'
+        req.description = 'Some new PayCode'
+        req.validUntil = '1488829883'
+
+        data = req.get_data()
+
+        expected = {
+            'amount': 55.5,
+            'currencyCode': 'EUR',
+            'orderId': '1234567',
+            'description': 'Some new PayCode',
+            'validUntil': '1488829883'
         }
 
         assert data == expected

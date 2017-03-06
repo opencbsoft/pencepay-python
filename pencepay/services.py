@@ -11,12 +11,20 @@ class CreditCard(CustomerBasedServiceMixin, CRUDBasedServiceMixin, BaseService):
     api = APIChoices.CARDS
 
 
+class BankAccount(CustomerBasedServiceMixin, BaseService, CRUDBasedServiceMixin):
+    api = APIChoices.BANK_ACCOUNTS
+
+
 class Address(CustomerBasedServiceMixin, CRUDBasedServiceMixin, BaseService):
     api = APIChoices.ADDRESSES
 
 
 class Customer(BaseService, CRUDBasedServiceMixin):
     api = APIChoices.CUSTOMERS
+
+
+class PayCode(BaseService, CRUDBasedServiceMixin):
+    api = APIChoices.PAYCODES
 
 
 class Event(BaseService):

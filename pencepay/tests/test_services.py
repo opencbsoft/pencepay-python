@@ -3,8 +3,8 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest
-from pencepay.services import CreditCard, Customer, Address, Event
+from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest, BankAccountRequest, PayCodeRequest
+from pencepay.services import CreditCard, Customer, Address, Event, BankAccount, PayCode
 from pencepay.tests.base import HTTPRequestTest
 
 
@@ -143,6 +143,150 @@ class TestCreditCardService(HTTPRequestTest):
         args = requests_mock.call_args[1]
 
         assert self.customer_uid in args['url']
+        assert args['method'] == 'DELETE'
+
+        assert response.status_code == 200
+
+
+class TestBankAccountService(HTTPRequestTest):
+    @classmethod
+    def setup_class(cls):
+        request = BankAccountRequest()
+        request.accountHolder = 'John Hancock'
+        request.accountNumber = '1111112222'
+        request.iban = 'GB0000000000000'
+        request.bic = 'GB001BIC'
+        request.countryCode = 'HR'
+
+        cls.account_request = request
+        cls.customer_uid = 'cust_nLCjAco94iXGLC'
+
+    def test_create(self, requests_mock):
+        response = BankAccount(customer_uid=self.customer_uid).create(request=self.account_request)
+
+        args = requests_mock.call_args[1]
+
+        assert self.customer_uid in args['url']
+        assert args['data']['iban'] == 'GB0000000000000'
+        assert args['method'] == 'POST'
+        assert response.status_code == 200
+
+    def test_find(self, requests_mock):
+        response = BankAccount(customer_uid=self.customer_uid).find(uid='ba_nLCjATog6cXGLC')
+
+        args = requests_mock.call_args[1]
+
+        assert self.customer_uid in args['url']
+        assert 'ba_nLCjATog6cXGLC' in args['url']
+        assert args['method'] == 'GET'
+        assert response.status_code == 200
+
+    def test_search(self, requests_mock):
+        response = BankAccount(customer_uid=self.customer_uid).search({'bic': 'GB001BIC'})
+
+        args = requests_mock.call_args[1]
+
+        assert self.customer_uid in args['url']
+        assert args['params']['bic'] == 'GB001BIC'
+        assert args['method'] == 'GET'
+        assert response.status_code == 200
+
+    def test_update(self, requests_mock):
+        request = BankAccountRequest()
+        request.accountHolder = 'John Hancock'
+        request.accountNumber = '1111112222'
+        request.iban = 'ES0000000000000'
+        request.bic = 'GB001BIC'
+        request.countryCode = 'ES'
+
+        response = BankAccount(customer_uid=self.customer_uid).update(uid='ba_nLCjATog6cXGLC', request=request)
+
+        args = requests_mock.call_args[1]
+
+        assert self.customer_uid in args['url']
+        assert 'ba_nLCjATog6cXGLC' in args['url']
+        assert args['data']['countryCode'] == 'ES'
+        assert args['method'] == 'POST'
+
+        assert response.status_code == 200
+
+    def test_delete(self, requests_mock):
+        response = BankAccount(customer_uid=self.customer_uid).delete(uid='ba_nLCjATog6cXGLC')
+
+        args = requests_mock.call_args[1]
+
+        assert self.customer_uid in args['url']
+        assert 'ba_nLCjATog6cXGLC' in args['url']
+        assert args['method'] == 'DELETE'
+        assert response.status_code == 200
+
+
+class TestPayCodeService(HTTPRequestTest):
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+
+        request = PayCodeRequest()
+        request.amount = '55.5'
+        request.currencyCode = 'EUR'
+        request.orderId = '1234567'
+        request.description = 'Some new PayCode'
+        request.validUntil = '1488829883'
+
+        cls.paycode_request = request
+
+    def test_create(self, requests_mock):
+        response = PayCode().create(request=self.paycode_request)
+
+        args = requests_mock.call_args[1]
+
+        assert args['data']['orderId'] == '1234567'
+
+        assert response.status_code == 200
+
+    def test_find(self, requests_mock):
+        response = PayCode().find(uid='payc_8I6pcqLqeTqGxI')
+
+        args = requests_mock.call_args[1]
+
+        assert 'payc_8I6pcqLqeTqGxI' in args['url']
+        assert args['method'] == 'GET'
+
+        assert response.status_code == 200
+
+    def test_search(self, requests_mock):
+        response = PayCode().search({'orderId': '1234567'})
+
+        args = requests_mock.call_args[1]
+
+        assert 'orderId' in args['params']
+
+        assert response.status_code == 200
+
+    def test_update(self, requests_mock):
+        request = PayCodeRequest()
+        request.amount = '55.5'
+        request.currencyCode = 'EUR'
+        request.orderId = '1234567'
+        request.description = 'Some different description'
+        request.validUntil = '1488829883'
+
+        response = PayCode().update(uid='payc_8I6pcqLqeTqGxI', request=request)
+
+        args = requests_mock.call_args[1]
+
+        assert 'payc_8I6pcqLqeTqGxI' in args['url']
+        assert args['method'] == 'POST'
+        assert args['data']['description'] == 'Some different description'
+
+        assert response.status_code == 200
+
+    def test_delete(self, requests_mock):
+        response = PayCode().delete(uid='payc_8I6pcqLqeTqGxI')
+
+        args = requests_mock.call_args[1]
+
+        assert 'payc_8I6pcqLqeTqGxI' in args['url']
         assert args['method'] == 'DELETE'
 
         assert response.status_code == 200
