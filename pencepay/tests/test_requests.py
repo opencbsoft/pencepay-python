@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from pencepay.request import AddressRequest, TransactionRequest, CustomerRequest, CreditCardRequest
+from pencepay.request import AddressRequest, TransactionRequest, CustomerRequest, CreditCardRequest, TagRequest
 from pencepay.request import EventRequest, BankAccountRequest, PayCodeRequest
 
 from pencepay.utils.exceptions import ValidationError
@@ -231,3 +231,19 @@ class TestEventRequest:
         assert event.uid == data['uid']
         assert event.transaction.paymentMethod == data['transaction']['paymentMethod']
         assert event.transaction.creditCard.cardholderName == data['transaction']['creditCard']['cardholderName']
+
+
+class TestTagRequest:
+    def test_get_data(self):
+        req = TagRequest()
+        req.name = 'First Tag'
+        req.code = '4321'
+
+        data = req.get_data()
+
+        expected = {
+            'name': 'First Tag',
+            'code': '4321',
+        }
+
+        assert data == expected
