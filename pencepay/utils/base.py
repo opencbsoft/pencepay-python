@@ -23,6 +23,7 @@ class RequestMetaclass(type):
         field_map = {k: v for k, v in cls.__dict__.items() if isinstance(v, Field)}
         serializer = type('RequestSerializer', (MakeObjectMixin, Schema), field_map.copy())
         serializer.obj_class = cls
+        serializer.fields_list = list(field_map.keys())
 
         cls.serializer_class = serializer
 
