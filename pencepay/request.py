@@ -80,3 +80,8 @@ class EventRequest(BaseRequest):
     objectType = fields.Str()
     created = fields.Int()
     transaction = fields.Nested(TransactionRequest.as_field())
+
+
+class TagRequest(BaseRequest):
+    name = fields.Str()
+    code = fields.Str()

@@ -138,6 +138,28 @@ ENDPOINTS = {
             'path': '/paycode/{uid}'
         }
     },
+    api.TAGS: {
+        actions.CREATE: {
+            'method': 'POST',
+            'path': '/tag',
+        },
+        actions.FIND: {
+            'method': 'GET',
+            'path': '/tag/{uid}'
+        },
+        actions.SEARCH: {
+            'method': 'GET',
+            'path': '/tags'
+        },
+        actions.UPDATE: {
+            'method': 'POST',
+            'path': '/tag/{uid}'
+        },
+        actions.DELETE: {
+            'method': 'DELETE',
+            'path': '/tag/{uid}'
+        }
+    },
     api.EVENTS: {
         actions.SEARCH: {
             'method': 'GET',

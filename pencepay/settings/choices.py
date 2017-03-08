@@ -17,3 +17,4 @@ class APIChoices:
     BANK_ACCOUNTS = 'bank_accounts'
     PAYCODES = 'paycodes'
     EVENTS = 'events'
+    TAGS = 'tags'

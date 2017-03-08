@@ -27,6 +27,10 @@ class PayCode(BaseService, CRUDBasedServiceMixin):
     api = APIChoices.PAYCODES
 
 
+class Tag(BaseService, CRUDBasedServiceMixin):
+    api = APIChoices.TAGS
+
+
 class Event(BaseService):
     api = APIChoices.EVENTS
 

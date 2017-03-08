@@ -3,7 +3,8 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest, BankAccountRequest, PayCodeRequest
+from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest, BankAccountRequest, PayCodeRequest, \
+    TagRequest
 from pencepay.services import CreditCard, Customer, Address, Event, BankAccount, PayCode
 from pencepay.tests.base import HTTPRequestTest
 
@@ -287,6 +288,70 @@ class TestPayCodeService(HTTPRequestTest):
         args = requests_mock.call_args[1]
 
         assert 'payc_8I6pcqLqeTqGxI' in args['url']
+        assert args['method'] == 'DELETE'
+
+        assert response.status_code == 200
+
+
+class TestTagService(HTTPRequestTest):
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+
+        request = TagRequest()
+        request.name = 'First Tag'
+        request.code = '4321'
+
+        cls.tag_request = request
+
+    def test_create(self, requests_mock):
+        response = PayCode().create(request=self.tag_request)
+
+        args = requests_mock.call_args[1]
+
+        assert args['data']['code'] == '4321'
+
+        assert response.status_code == 200
+
+    def test_find(self, requests_mock):
+        response = PayCode().find(uid='tag_8I6pcqLqeTqGxI')
+
+        args = requests_mock.call_args[1]
+
+        assert 'tag_8I6pcqLqeTqGxI' in args['url']
+        assert args['method'] == 'GET'
+
+        assert response.status_code == 200
+
+    def test_search(self, requests_mock):
+        response = PayCode().search({'orderId': '1234567'})
+
+        args = requests_mock.call_args[1]
+
+        assert 'orderId' in args['params']
+
+        assert response.status_code == 200
+
+    def test_update(self, requests_mock):
+        request = TagRequest()
+        request.code = '7777'
+
+        response = PayCode().update(uid='tag_8I6pcqLqeTqGxI', request=request)
+
+        args = requests_mock.call_args[1]
+
+        assert 'tag_8I6pcqLqeTqGxI' in args['url']
+        assert args['method'] == 'POST'
+        assert args['data']['code'] == '7777'
+
+        assert response.status_code == 200
+
+    def test_delete(self, requests_mock):
+        response = PayCode().delete(uid='tag_8I6pcqLqeTqGxI')
+
+        args = requests_mock.call_args[1]
+
+        assert 'tag_8I6pcqLqeTqGxI' in args['url']
         assert args['method'] == 'DELETE'
 
         assert response.status_code == 200
