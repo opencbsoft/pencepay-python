@@ -41,11 +41,6 @@ class PayCodeRequest(BaseRequest):
     validUntil = fields.Str(required=True)
 
 
-class TagRequest(BaseRequest):
-    name = fields.Str()
-    code = fields.Str()
-
-
 class SettingsRequest(BaseRequest):
     saveInSafe = fields.Bool(required=False)
     reserveFundsOnly = fields.Bool(required=False)
@@ -65,7 +60,7 @@ class TransactionRequest(BaseRequest):
     customer = fields.Nested(CustomerRequest.as_field(), required=False)
     billingAddress = fields.Nested(AddressRequest.as_field(), required=False)
     creditCard = fields.Nested(CreditCardRequest.as_field(), required=False)
-    tags = fields.Nested(AddressRequest.as_field(), required=False)
+    tags = fields.List(fields.Str(), default=[], required=False)
     settings = fields.Nested(SettingsRequest.as_field(), required=False)
 
     def validate(self):
@@ -86,3 +81,8 @@ class EventRequest(BaseRequest):
     objectType = fields.Str()
     created = fields.Int()
     transaction = fields.Nested(TransactionRequest.as_field())
+
+
+class TagRequest(BaseRequest):
+    name = fields.Str()
+    code = fields.Str()
