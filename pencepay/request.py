@@ -15,6 +15,7 @@ class CustomerRequest(BaseRequest):
     firstName = fields.Str(required=False)
     lastName = fields.Str(required=False)
     email = fields.Str(required=True)
+    phone = fields.Number(required=False)
 
 
 class CreditCardRequest(BaseRequest):
@@ -57,6 +58,7 @@ class TransactionRequest(BaseRequest):
     requestIpAddress = fields.Str(required=False)
     cancelUrl = fields.Str(required=False)
     redirectUrl = fields.Str(required=False)
+    customData = fields.Dict(required=False)
     customer = fields.Nested(CustomerRequest.as_field(), required=False)
     billingAddress = fields.Nested(AddressRequest.as_field(), required=False)
     creditCard = fields.Nested(CreditCardRequest.as_field(), required=False)
