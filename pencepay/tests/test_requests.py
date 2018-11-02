@@ -101,7 +101,7 @@ class TestPayCodeRequest:
             'currencyCode': 'EUR',
             'orderId': '1234567',
             'description': 'Some new PayCode',
-            'validUntil': '1488829883'
+            'validUntil': '1488829883',
         }
 
         assert data == expected
@@ -154,6 +154,7 @@ class TestTransactionRequest:
             'creditCard.cvv': '313',
             'creditCard.expiryMonth': 12,
             'creditCard.expiryYear': 2018,
+            'tags': [],
         }
 
         assert data == expected
@@ -190,7 +191,8 @@ class TestTransactionRequest:
                 'cvv': '313',
                 'expiryMonth': 12,
                 'expiryYear': 2018,
-            }
+            },
+            'tags': [],
         }
 
         assert data == expected
@@ -206,7 +208,8 @@ class TestTransactionRequest:
         expected = {
             'creditCardUid': 'some1234uid',
             'amount': 55.5,
-            'currencyCode': 'USD'
+            'currencyCode': 'USD',
+            'tags': []
         }
 
         assert data == expected

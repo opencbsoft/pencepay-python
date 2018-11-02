@@ -50,6 +50,10 @@ class TestTransactionService(HTTPRequestTest):
         )
 
     def test_create(self):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Transaction().create(request=self.transaction_request)
 
         assert response.status_code == 200
@@ -59,6 +63,10 @@ class TestTransactionService(HTTPRequestTest):
         transaction_request.creditCardUid = 'card_X8I6pT7g7c7nxI'
         transaction_request.amount = 22
         transaction_request.currencyCode = 'EUR'
+
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
 
         response = Transaction().create(request=transaction_request)
 
@@ -70,11 +78,19 @@ class TestTransactionService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_search(self):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Transaction().search(params={'currencyCode': 'EUR'})
 
         assert response.status_code == 200
 
     def test_void(self):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Transaction().void(uid='txn_ACenirxGG5ioxA')
 
         assert response.status_code == 200
@@ -82,12 +98,20 @@ class TestTransactionService(HTTPRequestTest):
     def test_capture(self):
         req = AmountTransactionRequest(amount=55)
 
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Transaction().capture(uid='txn_ACenirxGG5ioxA', request=req)
 
         assert response.status_code == 200
 
     def test_refund(self):
         req = AmountTransactionRequest(amount=55)
+
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
 
         response = Transaction().refund(uid='txn_ACenirxGG5ioxA', request=req)
 

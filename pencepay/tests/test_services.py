@@ -6,6 +6,7 @@ import pytest
 from pencepay.request import CustomerRequest, CreditCardRequest, AddressRequest, BankAccountRequest, PayCodeRequest, \
     TagRequest
 from pencepay.services import CreditCard, Customer, Address, Event, BankAccount, PayCode
+from pencepay.settings.config import Context
 from pencepay.tests.base import HTTPRequestTest
 
 
@@ -32,6 +33,10 @@ class TestCustomerService(HTTPRequestTest):
         cls.customer_uid = 'cust_nLCjAco94iXGLC'
 
     def test_create(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Customer().create(request=self.customer_request)
 
         args = requests_mock.call_args[1]
@@ -41,6 +46,10 @@ class TestCustomerService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_find(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Customer().find(uid=self.customer_uid)
 
         args = requests_mock.call_args[1]
@@ -51,6 +60,10 @@ class TestCustomerService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_search(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Customer().search({'email': 'hancock@server.com'})
 
         args = requests_mock.call_args[1]
@@ -60,6 +73,10 @@ class TestCustomerService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_update(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Customer().update(uid=self.customer_uid, request=self.customer_request)
 
         args = requests_mock.call_args[1]
@@ -71,6 +88,10 @@ class TestCustomerService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_delete(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Customer().delete(uid=self.customer_uid)
 
         args = requests_mock.call_args[1]
@@ -237,6 +258,10 @@ class TestPayCodeService(HTTPRequestTest):
         cls.paycode_request = request
 
     def test_create(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().create(request=self.paycode_request)
 
         args = requests_mock.call_args[1]
@@ -246,6 +271,10 @@ class TestPayCodeService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_find(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().find(uid='payc_8I6pcqLqeTqGxI')
 
         args = requests_mock.call_args[1]
@@ -256,6 +285,10 @@ class TestPayCodeService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_search(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().search({'orderId': '1234567'})
 
         args = requests_mock.call_args[1]
@@ -272,6 +305,10 @@ class TestPayCodeService(HTTPRequestTest):
         request.description = 'Some different description'
         request.validUntil = '1488829883'
 
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().update(uid='payc_8I6pcqLqeTqGxI', request=request)
 
         args = requests_mock.call_args[1]
@@ -283,6 +320,10 @@ class TestPayCodeService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_delete(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().delete(uid='payc_8I6pcqLqeTqGxI')
 
         args = requests_mock.call_args[1]
@@ -305,6 +346,10 @@ class TestTagService(HTTPRequestTest):
         cls.tag_request = request
 
     def test_create(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().create(request=self.tag_request)
 
         args = requests_mock.call_args[1]
@@ -314,6 +359,10 @@ class TestTagService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_find(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().find(uid='tag_8I6pcqLqeTqGxI')
 
         args = requests_mock.call_args[1]
@@ -324,6 +373,10 @@ class TestTagService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_search(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().search({'orderId': '1234567'})
 
         args = requests_mock.call_args[1]
@@ -333,6 +386,10 @@ class TestTagService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_update(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         request = TagRequest()
         request.code = '7777'
 
@@ -347,6 +404,10 @@ class TestTagService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_delete(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = PayCode().delete(uid='tag_8I6pcqLqeTqGxI')
 
         args = requests_mock.call_args[1]
@@ -369,6 +430,10 @@ class TestAddressService(HTTPRequestTest):
         cls.customer_uid = 'cust_nLCjAco94iXGLC'
 
     def test_create(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Address(customer_uid=self.customer_uid).create(request=self.address_request)
 
         args = requests_mock.call_args[1]
@@ -379,6 +444,10 @@ class TestAddressService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_find(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Address(customer_uid=self.customer_uid).find(uid='addr_e5uEriGzATKpLu')
 
         args = requests_mock.call_args[1]
@@ -389,6 +458,10 @@ class TestAddressService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_search(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Address(customer_uid=self.customer_uid).search({'city': 'Zagreb'})
 
         args = requests_mock.call_args[1]
@@ -405,6 +478,10 @@ class TestAddressService(HTTPRequestTest):
             countryCode='HR'
         )
 
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Address(customer_uid=self.customer_uid).update(uid='cust_rLu7LTgKbceGdu', request=request)
 
         args = requests_mock.call_args[1]
@@ -417,6 +494,10 @@ class TestAddressService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_delete(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Address(customer_uid=self.customer_uid).delete(uid='cust_rLu7LTgKbceGdu')
 
         args = requests_mock.call_args[1]
@@ -429,6 +510,10 @@ class TestAddressService(HTTPRequestTest):
 
 class TestEventService(HTTPRequestTest):
     def test_find(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Event().find(uid='evnt_rt7oiejK56iKME')
 
         args = requests_mock.call_args[1]
@@ -438,6 +523,10 @@ class TestEventService(HTTPRequestTest):
         assert response.status_code == 200
 
     def test_search(self, requests_mock):
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         response = Event().search({'objectUid': 'evnt_rt7oiejK56iKME'})
 
         args = requests_mock.call_args[1]
@@ -450,6 +539,10 @@ class TestEventService(HTTPRequestTest):
         with open('pencepay/tests/data/event.json') as f:
             data = json.load(f)
 
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
+
         event = Event().parse(data)
 
         assert event.uid == data['uid']
@@ -459,6 +552,10 @@ class TestEventService(HTTPRequestTest):
     def test_parse_authenticity(self, requests_mock):
         with open('pencepay/tests/data/event.json') as f:
             data = json.load(f)
+
+        Context.api_version = '1.0.4'
+        Context.public_key = 'your-public-key'
+        Context.secret_key = 'your-secret-key'
 
         event = Event().parse(data, check_authenticity=True)
 
