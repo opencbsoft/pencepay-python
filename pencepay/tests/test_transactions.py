@@ -130,6 +130,7 @@ class TestTransactionService(HTTPRequestTest):
             'apiVersion': '1.0.4',
             'publicKey': 'your-public-key',
             'signature': '4b13c88732ee001eae9dc30c69ea826949ac0c12afc6c51c2082163e57c277c5',
+            'tags': [],
         }
 
         assert data == expected
